@@ -1,14 +1,18 @@
 // Import dependencies
 import { connect, Schema, model } from 'mongoose';
+import {database} from '../config';
 import express  from 'express';
 var router = express.Router();
 
 // MongoDB URL from the docker-compose file
-const dbHost = 'mongodb://database/mean-docker';
-
+//const dbHost = 'mongodb://database/mean-docker';
+const dbhost= 'mongodb://guesttuser:guestuserpassword@my-api-mongodb:27017/meanDB';
 // Connect to mongodb
-connect(dbHost);
+console.log ("trying to connect to mongodb .." +  dbhost.toString())
 
+//connect(database.url);
+connect(dbhost,{ useNewUrlParser: true });
+console.log ("successfully connected  to mongodb .." +  dbhost.toString())
 // create mongoose schema
 const userSchema = new Schema({
   name: String,
@@ -17,7 +21,6 @@ const userSchema = new Schema({
 
 // create mongoose model
 const User = model('User', userSchema);
-
 router.get('/', (req, res) => {
 	res.send("API is working ");
 })
@@ -34,7 +37,7 @@ router.get('/users', (req, res) => {
 /* GET one users. */
 router.get('/users/:id', (req, res) => {
 	User.findById(req.params.id, (err, users) => {
-		if (err) res.status(500).send(error)
+		if (err){} res.status(500).send(error)
 
 		res.status(200).json(users);
 	});
