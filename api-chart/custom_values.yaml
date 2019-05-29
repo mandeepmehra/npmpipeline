@@ -6,6 +6,7 @@ image:
 service:
   name: be
   type: NodePort
+  nodePort: 30100
   externalPort: 3000
   internalPort: 3000
 

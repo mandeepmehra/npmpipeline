@@ -11,6 +11,7 @@ image:
 service:
   name: mean-api
   type: NodePort
+  nodePort: 300100
   externalPort: 3000
   internalPort: 3000
 resources:
