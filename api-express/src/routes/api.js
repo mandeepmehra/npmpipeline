@@ -7,10 +7,10 @@ var router = express.Router();
 // MongoDB URL from the docker-compose file
 //const dbHost = 'mongodb://database/mean-docker';
 //var mongoHost = process.env.HOSTNAME || 'mongoservice';
-var mongoPort= '27017';
+var mongoPort= process.env.MONGODB_PORT || '27017';
 var mongoUsername='priyanku';
 var mongoPassword='admin123';
-var mongoservicename='db';
+var mongoservicename=process.env.MONGODB_HOST ||'db';
 var mongoDBName='sample';
 const dbUrl = 'mongodb://db/sample';
 //const dbUrl= 'mongodb://'+mongoUsername+ ':' + mongoPassword + '@' + mongoservicename +':' +mongoPort+ '/' + mongoDBName;

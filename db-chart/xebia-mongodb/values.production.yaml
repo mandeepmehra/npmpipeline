@@ -109,12 +109,13 @@ service:
   ##
   # loadBalancerIP:
 
+
 ## Setting up replication
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb#setting-up-a-replication
 #
 replicaSet:
   ## Whether to create a MongoDB replica set for high availability or not
-  enabled: false
+  enabled: true
   useHostnames: true
 
   ## Name of the replica set
@@ -275,8 +276,8 @@ configmap:
 #      enabled: true
 #      pathPrefix: /opt/bitnami/mongodb/tmp
 #  # replica set options
-#  #replication:
-#  #  replSetName: replicaset
+#  replication:
+#    replSetName: replicaset
 #  # process management options
 #  processManagement:
 #     fork: false
@@ -287,12 +288,12 @@ configmap:
 #  # security options
 #  security:
 #    authorization: enabled
-#    #keyFile: /opt/bitnami/mongodb/conf/keyfile
+#    keyFile: /opt/bitnami/mongodb/conf/keyfile
 
 ## Prometheus Exporter / Metrics
 ##
 metrics:
-  enabled: false
+  enabled: true
 
   image:
     registry: docker.io
@@ -318,14 +319,14 @@ metrics:
   ## Metrics exporter liveness and readiness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   livenessProbe:
-    enabled: false
+    enabled: true
     initialDelaySeconds: 15
     periodSeconds: 5
     timeoutSeconds: 5
     failureThreshold: 3
     successThreshold: 1
   readinessProbe:
-    enabled: false
+    enabled: true
     initialDelaySeconds: 5
     periodSeconds: 5
     timeoutSeconds: 1
