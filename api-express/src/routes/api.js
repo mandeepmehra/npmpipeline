@@ -1,18 +1,38 @@
 // Import dependencies
-import { connect, Schema, model } from 'mongoose';
+import { connect, connection,Schema, model } from 'mongoose';
 import {database} from '../config';
 import express  from 'express';
 var router = express.Router();
 
 // MongoDB URL from the docker-compose file
 //const dbHost = 'mongodb://database/mean-docker';
-const dbhost= 'mongodb://guesttuser:guestuserpassword@my-api-mongodb:27017/meanDB';
+//var mongoHost = process.env.HOSTNAME || 'mongoservice';
+var mongoPort= '27017';
+var mongoUsername='priyanku';
+var mongoPassword='admin123';
+var mongoservicename='db';
+var mongoDBName='sample';
+const dbUrl= 'mongodb://'+mongoUsername+ ':' + mongoPassword + '@' + mongoservicename +':' +mongoPort+ '/' + mongoDBName;
+
 // Connect to mongodb
-console.log ("trying to connect to mongodb .." +  dbhost.toString())
+console.log ("trying to connect to mongodb .." +  dbUrl.toString())
 
 //connect(database.url);
-connect(dbhost,{ useNewUrlParser: true });
-console.log ("successfully connected  to mongodb .." +  dbhost.toString())
+connect(dbUrl,{ useNewUrlParser: true });
+connection.on('connected', function () {  
+	console.log('Mongoose default connection open to ' + dbUrl);
+  }); 
+  
+  // If the connection throws an error
+  connection.on('error',function (err) {  
+	console.log('Mongoose default connection error: ' + err);
+  }); 
+  
+  // When the connection is disconnected
+  connection.on('disconnected', function () {  
+	console.log('Mongoose default connection disconnected'); 
+  });
+
 // create mongoose schema
 const userSchema = new Schema({
   name: String,

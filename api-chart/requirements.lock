@@ -1,0 +1,6 @@
+dependencies:
+- name: xebiamongodb
+  repository: file://../db-chart/xebia-mongodb
+  version: 0.4.29
+digest: sha256:5e168e1dbb336ec09ce80599491651acba828579dcc03872056e96c194ba297f
+generated: "2019-05-24T17:12:11.693473+05:30"
