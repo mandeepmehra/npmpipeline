@@ -12,7 +12,8 @@ var mongoUsername='priyanku';
 var mongoPassword='admin123';
 var mongoservicename='db';
 var mongoDBName='sample';
-const dbUrl= 'mongodb://'+mongoUsername+ ':' + mongoPassword + '@' + mongoservicename +':' +mongoPort+ '/' + mongoDBName;
+const dbUrl = 'mongodb://db/sample';
+//const dbUrl= 'mongodb://'+mongoUsername+ ':' + mongoPassword + '@' + mongoservicename +':' +mongoPort+ '/' + mongoDBName;
 
 // Connect to mongodb
 console.log ("trying to connect to mongodb .." +  dbUrl.toString())
