@@ -7,10 +7,16 @@
     -https://helm.sh/docs/using_helm/#installing-tiller
     -
 ## Once clusrter is set up 
+
+- ensure  the below docker images are updated in docker registry ( currently using doker hub )
+    - konarpriyanku/xebia_fe
+    - konarpriyanku/xebia_be
+    - the db_chart internally uses  the repository bitnami/mongodb
 - install the helm charts
 - cd into dir xebia-microservice-mean-backend
 - run "helm dep list api-chart"
 - helm dep update api-chart  ( will put the db-chart dependency  within the chart folder  inside api-chart folder )
 - after running the above command you  shoiuld see db-0.1.0.tgz file within api-chart/chart folder
--- dry run your char before actual install by running "helm install --debug --dry-run ./mychart."
-- helm install --name my-api -f ./api-chart/custom_values.yaml api-chart
+- dry run your char before actual install by running "helm install --debug --dry-run ./mychart."
+- update the dependent api-chart by running " helm dep update api-chart"
+- run "helm install --name api  -f ./api-chart/custom_values.yaml   ./api-chart" to install the chart in kubernetes 
