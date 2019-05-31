@@ -1,0 +1,54 @@
+#!groovy
+
+pipeline{
+    agent {
+        any
+    }
+    options{
+         buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+    environment {
+        DTR_URL = 'repo'
+        DTR_NAMESPACE = 'ge-poc'
+        IMAGE_NAME = 'ge-api-poc'
+        IMAGE_TAG = "${DTR_URL}/${DTR_NAMESPACE}/${IMAGE_NAME}:${BUILD_NUMBER}"
+    }
+    stages{
+        stage ('Pull dependencies'){
+            steps{
+                // download all the necessary packages
+                sh 'npm install'
+            }
+        }
+
+        stage ('Unit Testing'){
+            steps{
+                // download all the necessary packages
+                sh 'npm test'
+            }
+        }
+
+        stage ('Build Image'){
+            steps{
+                 sh "docker build . -t ${IMAGE_TAG}"
+            }
+        }
+        stage ('Publish Image'){
+            steps{
+                sh 'echo TBD'
+            }
+        }
+
+        stage ('Deploy to QA'){
+            steps{
+                 sh 'echo TBD'
+            }
+        }
+
+        stage ('Run Integration Tests'){
+            steps{
+                sh 'echo TBD'
+            }
+        }
+    }
+}
