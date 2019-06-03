@@ -33,7 +33,9 @@ pipeline{
 
         stage ('Build Image'){
             steps{
-                 sh "docker build . -t ${IMAGE_TAG}"
+		dir("${SRC_DIR}"){
+                  sh "docker build . -t ${IMAGE_TAG}"
+                }
             }
         }
         stage ('Publish Image'){
