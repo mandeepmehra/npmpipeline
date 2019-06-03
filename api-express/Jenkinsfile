@@ -6,6 +6,7 @@ pipeline{
          buildDiscarder(logRotator(numToKeepStr: '10'))
     }
     environment {
+        SRC_DIR='api-express'
         DTR_URL = 'repo'
         DTR_NAMESPACE = 'ge-poc'
         IMAGE_NAME = 'ge-api-poc'
@@ -15,14 +16,18 @@ pipeline{
         stage ('Pull dependencies'){
             steps{
                 // download all the necessary packages
-                sh 'npm install'
+                dir(${SRC_DIR}){
+                  sh 'npm install'
+                }
             }
         }
 
         stage ('Unit Testing'){
             steps{
                 // download all the necessary packages
-                sh 'npm test'
+                dir(${SRC_DIR}){
+                 sh 'npm test'
+                }
             }
         }
 
