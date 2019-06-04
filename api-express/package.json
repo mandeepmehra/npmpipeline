@@ -2,15 +2,22 @@
   "name": "api-express",
   "version": "0.0.0",
   "private": true,
+  "config": {
+    "build_output_dir": "./dist",
+    "configuration": "production",
+    "source_dir": "./src",
+    "debug_dir": "./dist/bin/www",
+    "executablePath": "/bin/www"
+  },
   "scripts": {
     "start": "npm run prod",
     "server": "babel-node ./src/bin/www",
-    "server:prod": "node ./dist/bin/www",
+    "server:prod": "node $npm_package_config_build_output_dir$npm_package_config_executablePath",
     "dev": "NODE_ENV=development npm-run-all server",
     "test": "mocha --require @babel/register './tests/**/*.spec.js' --recursive ",
-    "clean": "rimraf dist",
-    "build": "babel ./src --out-dir dist --source-maps",
-    "prod": "NODE_ENV=production npm-run-all clean build server:prod",
+    "clean": "rimraf $npm_package_config_build_output_dir",
+    "build": "babel $npm_package_config_source_dir --out-dir $npm_package_config_build_output_dir --source-maps",
+    "prod": "NODE_ENV=$npm_package_config_configuration npm-run-all clean build server:prod",
     "debug": "node --inspect-brk ./dist/bin/www",
     "watch": "nodemon"
   },

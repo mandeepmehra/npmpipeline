@@ -1,9 +1,15 @@
-version: '2' # specify docker-compose version
+version: '3' # specify docker-compose version
 
 # Define the services/containers to be run
 services:
   be: #name of the second service
-    build: api-express # specify the directory of the Dockerfile
+    build:
+      context: api-express # specify the directory of the Dockerfile
+      args:
+        - configuration=production
+        - buildOutputDir=./dist
+        - sourceDir=./src
+        - sample=defaultsample
     image: konarpriyanku/xebia_be
     ports:
       - "3000:3000" #specify ports forewarding
