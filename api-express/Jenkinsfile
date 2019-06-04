@@ -35,8 +35,10 @@ pipeline{
         stage ('Build Image'){
             steps{
 		dir("${SRC_DIR}"){
-		  docker.build IMAGE_TAG + ":$BUILD_NUMBER"
-                  // sh "docker build . -t ${IMAGE_TAG}"
+    		  script {
+		    docker.build IMAGE_TAG + ":$BUILD_NUMBER"
+                    // sh "docker build . -t ${IMAGE_TAG}"
+		  }
                 }
             }
         }
