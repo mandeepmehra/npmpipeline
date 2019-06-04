@@ -1,6 +1,0 @@
-dependencies:
-- name: mongodb
-  repository: file://../db-chart/xebia-mongodb
-  version: 5.17.4
-digest: sha256:91a1cdd678316386723ec97bc69de25300e92b692d7d3ca565f466e5c943ced8
-generated: "2019-05-29T19:17:50.075891+05:30"

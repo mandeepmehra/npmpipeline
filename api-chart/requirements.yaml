@@ -1,4 +1,0 @@
-dependencies:
-- name: mongodb
-  repository: file://../db-chart/xebia-mongodb
-  version: 5.17.4
