@@ -12,7 +12,8 @@ var mongoUsername='priyanku';
 var mongoPassword='admin123';
 var mongoservicename=process.env.MONGODB_HOST ||'db';
 var mongoDBName='sample';
-const dbUrl = 'mongodb://' + mongoservicename + '/sample';
+const dbUrl = 'mongodb://' + mongoservicename +':' +mongoPort+ '/' + mongoDBName;
+//const dbUrl = 'mongodb://' + mongoservicename + '/sample';
 //const dbUrl= 'mongodb://'+mongoUsername+ ':' + mongoPassword + '@' + mongoservicename +':' +mongoPort+ '/' + mongoDBName;
 
 // Connect to mongodb
