@@ -36,7 +36,7 @@ pipeline{
             steps{
 		dir("${SRC_DIR}"){
     		  script {
-		    docker.build IMAGE_TAG + ":$BUILD_NUMBER"
+		    docker.build IMAGE_TAG
                     // sh "docker build . -t ${IMAGE_TAG}"
 		  }
                 }
@@ -44,7 +44,11 @@ pipeline{
         }
         stage ('Publish Image'){
             steps{
-                sh 'echo TBD'
+              script {
+               docker.withRegistry( '', DTR_CREDS ) {
+                  dockerImage.push()
+               }
+             }
             }
         }
 
