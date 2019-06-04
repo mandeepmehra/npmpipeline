@@ -6,34 +6,50 @@ pipeline{
          buildDiscarder(logRotator(numToKeepStr: '10'))
     }
     environment {
-        DTR_URL = 'repo'
+        SRC_DIR='api-express'
+        DTR_URL = 'mandeepmehra'
+	DTR_CREDS = 'dockerhub'
         DTR_NAMESPACE = 'ge-poc'
         IMAGE_NAME = 'ge-api-poc'
-        IMAGE_TAG = "${DTR_URL}/${DTR_NAMESPACE}/${IMAGE_NAME}:${BUILD_NUMBER}"
+        IMAGE_TAG = "${DTR_URL}/${IMAGE_NAME}:${BUILD_NUMBER}"
+	DOCKER_IMAGE = ''
     }
     stages{
         stage ('Pull dependencies'){
             steps{
                 // download all the necessary packages
-                sh 'npm install'
+                dir("${SRC_DIR}"){
+                  sh 'npm install'
+                }
             }
         }
 
         stage ('Unit Testing'){
             steps{
                 // download all the necessary packages
-                sh 'npm test'
+                dir("${SRC_DIR}"){
+                 sh 'npm test'
+                }
             }
         }
 
         stage ('Build Image'){
             steps{
-                 sh "docker build . -t ${IMAGE_TAG}"
+		dir("${SRC_DIR}"){
+    		  script {
+		    DOCKER_IMAGE = docker.build IMAGE_TAG
+                    // sh "docker build . -t ${IMAGE_TAG}"
+		  }
+                }
             }
         }
         stage ('Publish Image'){
             steps{
-                sh 'echo TBD'
+              script {
+               docker.withRegistry( '', DTR_CREDS ) {
+                  DOCKER_IMAGE.push()
+               }
+             }
             }
         }
 
