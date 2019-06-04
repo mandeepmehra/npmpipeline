@@ -3,6 +3,8 @@ version: '3' # specify docker-compose version
 # Define the services/containers to be run
 services:
   be: #name of the second service
+    environment:
+        - DOCKER_COMPOSE_DB_SERVICE=db  # exclusively set only in docker-compose 
     build:
       context: api-express # specify the directory of the Dockerfile
       args:
