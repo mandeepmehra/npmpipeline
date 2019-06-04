@@ -20,7 +20,7 @@ const dbUrl = 'mongodb://' + mongoservicename +':' +mongoPort+ '/' + mongoDBName
 console.log ("trying to connect to mongodb .." +  dbUrl.toString())
 
 //connect(database.url);
-connect(dbUrl,{ useNewUrlParser: true });
+//connect(dbUrl,{ useNewUrlParser: true });
 connection.on('connected', function () {  
 	console.log('Mongoose default connection open to ' + dbUrl);
   }); 
@@ -43,6 +43,7 @@ const userSchema = new Schema({
 
 // create mongoose model
 const User = model('User', userSchema);
+
 router.get('/', (req, res) => {
 	res.send("API is working ");
 })
@@ -50,6 +51,7 @@ router.get('/', (req, res) => {
 
 /* GET all Users */
 router.get('/users', (req, res) => {
+	connect(dbUrl,{ useNewUrlParser: true });
 	User.find({}, (err, users) => {
 		if (err) res.status(500).send(error)
 		res.status(200).json(users);
@@ -67,6 +69,7 @@ router.get('/users/:id', (req, res) => {
 
 /* Create a user. */
 router.post('/users', (req, res) => {
+	connect(dbUrl,{ useNewUrlParser: true });
 	let user = new User({
 		name: req.body.name,
 		age: req.body.age
