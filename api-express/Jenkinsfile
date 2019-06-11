@@ -82,4 +82,15 @@ pipeline{
             }
         }
     }
+
+    post 
+    {  
+         failure {  
+             mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL : ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "mandeep.mehra@xebia.com";  
+         }  
+         changed {  
+           mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL : ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "Build Status Changed: Project name -> ${env.JOB_NAME}", to: "mandeep.mehra@xebia.com";      
+         }  
+     }  
+
 }
