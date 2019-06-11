@@ -53,6 +53,18 @@ pipeline{
             }
         }
 
+	stage ('Cleanup Image'){
+           steps {
+             sh "docker rmi $IMAGE_TAG"
+	   }
+        }
+
+       stage ('Create helm package') {
+          steps {
+            sh "helm ls"
+          }
+       }
+
         stage ('Deploy to QA'){
             steps{
                  sh 'echo TBD'
