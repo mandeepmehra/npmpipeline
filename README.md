@@ -20,3 +20,5 @@
 - dry run your char before actual install by running "helm install --debug --dry-run ./mychart."
 - update the dependent api-chart by running " helm dep update api-chart"
 - run "helm install --name api  -f ./api-chart/custom_values.yaml   ./api-chart" to install the chart in kubernetes 
+
+## to seehow to deploy using helm chart  plesae refer repo https://gitlab.com/xebia-devops/xebia-helmcharts
