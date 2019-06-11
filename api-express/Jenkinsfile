@@ -33,6 +33,16 @@ pipeline{
             }
         }
 
+        stage ('Static Code Analysis'){
+           steps{
+            dir("${SRC_DIR}"){
+                  script {
+                    sh "sonar-scanner -Dsonar.host.url=http://sonarqube:9000"
+                  }
+             }
+          }
+        }
+
         stage ('Build Image'){
             steps{
 		dir("${SRC_DIR}"){
