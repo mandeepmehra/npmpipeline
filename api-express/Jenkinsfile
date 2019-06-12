@@ -26,8 +26,7 @@ pipeline{
                }
                stage ('chart dependencies') {
                  steps {
-                    checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitLabCreds', url: 'https://gitlab.com/xebia-devops/xebia-helmcharts']]]
-                 }
+                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'helcharts']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitLabCreds', url: 'https://gitlab.com/xebia-devops/xebia-helmcharts']]]}
                }
            }
         }
