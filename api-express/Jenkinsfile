@@ -12,7 +12,7 @@ pipeline{
         SRC_DIR='api-express'
         HELM_CHART='xebia-be'
         HELM_CHART_VER='0.1.0'
-        DTR_URL = 'devopspoc'
+        DTR_URL = 'mandeepmehra'
 	      DTR_CREDS = 'dockerhub'
         DTR_NAMESPACE = 'ge-poc'
         IMAGE_NAME = 'ge-api-poc'
