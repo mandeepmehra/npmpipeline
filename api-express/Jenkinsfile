@@ -11,6 +11,7 @@ pipeline{
         APP_NAME='xebia-be'
         SRC_DIR='api-express'
         HELM_CHART='xebia-be'
+        HELM_CHART_VER = ''
         DTR_URL = 'mandeepmehra'
 	      DTR_CREDS = 'dockerhub'
         DTR_NAMESPACE = 'ge-poc'
