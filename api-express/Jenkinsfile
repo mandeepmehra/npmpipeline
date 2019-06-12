@@ -16,12 +16,20 @@ pipeline{
     }
     stages{
         stage ('Pull dependencies'){
-            steps{
-                // download all the necessary packages
-                dir("${SRC_DIR}"){
-                  sh 'npm install'
-                }
-            }
+           parallel{
+               stage ('npm dependencies') {
+                 steps {
+                    dir("${SRC_DIR}"){
+                      sh 'npm install'
+                    }
+                 }
+               }
+               stage ('chart dependencies') {
+                 steps {
+                    checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitLabCreds', url: 'https://gitlab.com/xebia-devops/xebia-helmcharts']]]
+                 }
+               }
+           }
         }
 
         stage ('Unit Testing'){
