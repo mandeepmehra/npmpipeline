@@ -19,6 +19,8 @@ pipeline{
         IMAGE_TAG = "${DTR_URL}/${IMAGE_NAME}:${BUILD_NUMBER}"
 	      DOCKER_IMAGE = ''
         SKIP_INTEGRATION_TEST=false
+        ARTIFACTORY_USER = ''
+        ARTIFACTORY_PASS = ''
     }
     stages{
         stage ('Pull dependencies'){
@@ -107,8 +109,8 @@ pipeline{
               }
               steps {
                 dir("helmcharts"){
-                  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'artifactorycreds', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSW']]) {
-                    curl -u"${ARTIFACTORY_USER}:${ARTIFACTORY_PASS}" -T "${HELM_CHART}-${HELM_CHART_VER}.tgz" "${ARTIFACTORY_URL}/helm/${HELM_CHART}-${HELM_CHART_VER}.tgz"
+                  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'artifactorycreds', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASS']]) {
+                    sh "curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASS} -T ${HELM_CHART}-${HELM_CHART_VER}.tgz ${ARTIFACTORY_URL}/helm/${HELM_CHART}-${HELM_CHART_VER}.tgz"
                   }
                 }
               }
