@@ -31,61 +31,67 @@ pipeline{
            }
         }
 
-        stage ('Unit Testing'){
-            steps{
-                // download all the necessary packages
-                dir("${SRC_DIR}"){
-                 sh 'npm test'
-                }
+        stage ('Verify code quality & Build Image'){
+          parallel{
+            stage ('Unit Testing') {
+              steps{
+                  // download all the necessary packages
+                  dir("${SRC_DIR}"){
+                  sh 'npm test'
+                  }
+              }
             }
-        }
-
-        stage ('Static Code Analysis'){
-           steps{
-            dir("${SRC_DIR}"){
+            stage ('Static Code Analysis'){
+              steps{
+                dir("${SRC_DIR}"){
                   script {
                     sh "sonar-scanner -Dsonar.host.url=http://sonarqube:9000"
                   }
+                }
+              }
+            }
+            stage ('Build Image'){
+              steps{
+		            dir("${SRC_DIR}"){
+    		          script {
+		                DOCKER_IMAGE = docker.build IMAGE_TAG
+		              }
+                }
              }
+           }
           }
         }
 
-        stage ('Build Image'){
-            steps{
-		dir("${SRC_DIR}"){
-    		  script {
-		    DOCKER_IMAGE = docker.build IMAGE_TAG
-                    // sh "docker build . -t ${IMAGE_TAG}"
-		  }
-                }
-            }
-        }
         stage ('Scan Image'){
            steps{
             sh "docker run --rm -p9279:9279 -v /var/run/docker.sock:/var/run/docker.sock cplee/clair-scanner clair-scanner --ip ${SCANNER_CLIENT_IP}  -c http://${SCANNER_HOST}:${SCANNER_PORT} ${IMAGE_TAG}"
            }
         }
-        stage ('Publish Image'){
-            steps{
-              script {
-               docker.withRegistry( '', DTR_CREDS ) {
-                  DOCKER_IMAGE.push()
-               }
-             }
+
+        stage ('Publish Image & Create helm package'){
+          parallel {
+            stage ('Publish Image'){
+              steps{
+                script {
+                  docker.withRegistry( '', DTR_CREDS ) {
+                    DOCKER_IMAGE.push()
+                  }
+                }
+              }
             }
+            stage ('Create helm package') {
+              steps {
+                sh "helm ls"
+              }
+            }
+          }
         }
 
-	stage ('Cleanup Image'){
+	      stage ('Cleanup Image'){
            steps {
              sh "docker rmi $IMAGE_TAG"
-	   }
+	        }
         }
-
-       stage ('Create helm package') {
-          steps {
-            sh "helm ls"
-          }
-       }
 
         stage ('Deploy to QA'){
             steps{
