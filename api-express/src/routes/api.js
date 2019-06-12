@@ -10,7 +10,7 @@ var router = express.Router();
 var mongoPort= process.env.MONGODB_PORT || '27017';
 var mongoUsername='priyanku';
 var mongoPassword='admin123';
-var mongoservicename=process.env.MONGODB_HOST ||process.env.DOCKER_COMPOSE_DB_SERVICE ||'localhost';
+var mongoservicename=process.env.BE_MONGODB_SERVICE_HOST ||process.env.DOCKER_COMPOSE_DB_SERVICE ||'localhost';
 var mongoDBName='sample';
 const dbUrl = 'mongodb://' + mongoservicename +':' +mongoPort+ '/' + mongoDBName;
 //const dbUrl = 'mongodb://' + mongoservicename + '/sample';
@@ -60,6 +60,7 @@ router.get('/users', (req, res) => {
 
 /* GET one users. */
 router.get('/users/:id', (req, res) => {
+	connect(dbUrl,{ useNewUrlParser: true });
 	User.findById(req.params.id, (err, users) => {
 		if (err){} res.status(500).send(error)
 

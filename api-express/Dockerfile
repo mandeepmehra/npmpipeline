@@ -25,9 +25,10 @@ COPY . /app
 
 
 ENV NODE_ENV=$configuration,
-ENV buildOutputDir=${buildOutputDir},
-ENV sourceDir=${sourceDir},
-ENV sample=${sample}
+ENV npm_package_config_buildOutputDir=${buildOutputDir},
+ENV npm_package_config_sourceDir=${sourceDir},
+ENV npm_package_config_sample=${sample}
+ENV npm_package_config_configuration=${configuration}
 
 
 # Expose the port the app runs in
