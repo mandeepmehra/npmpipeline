@@ -150,7 +150,7 @@ pipeline{
           }
           steps{
                 sh 'helm repo update'
-                sh "helm upgrade --install ${APP_NAME}-prod  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,image.repository=${DTR_URL}/${IMAGE_NAME},service.nodePort=$QA_PORT --namespace prod helm/${APP_NAME} --version ${HELM_CHART_VER}"
+                sh "helm upgrade --install ${APP_NAME}-prod  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,image.repository=${DTR_URL}/${IMAGE_NAME},service.nodePort=$PROD_PORT --namespace prod helm/${APP_NAME} --version ${HELM_CHART_VER}"
           }
         }
 
