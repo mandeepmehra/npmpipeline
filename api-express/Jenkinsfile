@@ -6,13 +6,19 @@ pipeline{
          buildDiscarder(logRotator(numToKeepStr: '10'))
     }
     environment {
+        QA_PORT = '30101'
+        PROD_PORT = '30100'
+        APP_NAME='xebia-be'
         SRC_DIR='api-express'
-        DTR_URL = 'mandeepmehra'
-	DTR_CREDS = 'dockerhub'
+        HELM_CHART='xebia-be'
+        HELM_CHART_VER='0.1.0'
+        DTR_URL = 'devopspoc'
+	      DTR_CREDS = 'dockerhub'
         DTR_NAMESPACE = 'ge-poc'
         IMAGE_NAME = 'ge-api-poc'
         IMAGE_TAG = "${DTR_URL}/${IMAGE_NAME}:${BUILD_NUMBER}"
-	DOCKER_IMAGE = ''
+	      DOCKER_IMAGE = ''
+        SKIP_INTEGRATION_TEST=false
     }
     stages{
         stage ('Pull dependencies'){
@@ -26,7 +32,7 @@ pipeline{
                }
                stage ('chart dependencies') {
                  steps {
-                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'helcharts']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitLabCreds', url: 'https://gitlab.com/xebia-devops/xebia-helmcharts']]]}
+                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'helmcharts']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitLabCreds', url: 'https://gitlab.com/xebia-devops/xebia-helmcharts']]]}
                }
            }
         }
@@ -37,7 +43,7 @@ pipeline{
               steps{
                   // download all the necessary packages
                   dir("${SRC_DIR}"){
-                  sh 'npm test'
+                    sh 'npm test'
                   }
               }
             }
@@ -58,7 +64,21 @@ pipeline{
 		              }
                 }
              }
-           }
+            }
+            stage ('Create helm package') {
+              input {
+                message "Version your chart"
+                ok "Go Ahead"
+                parameters {
+                    string(name: 'HELM_CHART_VER', defaultValue: '${BUILD_NUMBER}', description: 'Helm chart version, defaults to build number')
+                }
+              }
+              steps {
+                dir("helmcharts"){
+                  sh 'helm package ${HELM_CHART_DIR} --version=${HELM_CHART_VER} -u --app-version ${BUILD_NUMBER}'
+                }
+              }
+            }          
           }
         }
 
@@ -68,7 +88,7 @@ pipeline{
            }
         }
 
-        stage ('Publish Image & Create helm package'){
+        stage ('Publish Image & Package'){
           parallel {
             stage ('Publish Image'){
               steps{
@@ -79,9 +99,18 @@ pipeline{
                 }
               }
             }
-            stage ('Create helm package') {
+            stage ('Publish helm package') {
               steps {
-                sh "helm ls"
+                dir("helcharts"){
+                  sh 'helm repo update'
+                }
+              }
+              steps {
+                dir("helmcharts"){
+                  withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'artifactorycreds', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASSW']]) {
+                    curl -u"${ARTIFACTORY_USER}:${ARTIFACTORY_PASS}" -T "${HELM_CHART}-${HELM_CHART_VER}.tgz" "${ARTIFACTORY_URL}/helm/${HELM_CHART}-${HELM_CHART_VER}.tgz"
+                  }
+                }
               }
             }
           }
@@ -95,11 +124,16 @@ pipeline{
 
         stage ('Deploy to QA'){
             steps{
-                 sh 'echo TBD'
+                 sh "helm upgrade --install ${APP_NAME}  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,service.nodePort=$QA_PORT --namespace qa helm/${APP_NAME} --version ${HELM_CHART_VER}"
             }
         }
 
         stage ('Run Integration Tests'){
+          when {
+            expression {
+                return SKIP_INTEGRATION_TEST == false;
+            }
+          }
             steps{
                 sh 'echo TBD'
             }
