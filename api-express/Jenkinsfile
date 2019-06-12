@@ -73,12 +73,12 @@ pipeline{
                 message "Version your chart"
                 ok "Go Ahead"
                 parameters {
-                    string(name: 'HELM_CHART_VER', defaultValue: '${BUILD_NUMBER}', description: 'Helm chart version, defaults to build number')
+                    string(name: 'HELM_CHART_VER', defaultValue: "${BUILD_NUMBER}", description: 'Helm chart version, defaults to build number')
                 }
               }
               steps {
                 dir("helmcharts"){
-                  sh 'helm package ${HELM_CHART_DIR} --version=${HELM_CHART_VER} -u --app-version ${BUILD_NUMBER}'
+                  sh 'helm package ${HELM_CHART} --version=${HELM_CHART_VER} -u --app-version ${BUILD_NUMBER}'
                 }
               }
             }          
