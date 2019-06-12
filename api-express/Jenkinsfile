@@ -108,7 +108,7 @@ pipeline{
                   sh 'helm repo update'
              
                   withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'artifactorycreds', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASS']]) {
-                    sh "curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASS} -T ${HELM_CHART}-${HELM_CHART_VER}.tgz ${ARTIFACTORY_URL}/pochelmrepo/${HELM_CHART}-${HELM_CHART_VER}.tgz"
+                    sh "curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASS} -T ${HELM_CHART}-${HELM_CHART_VER}.tgz ${ARTIFACTORY_URL}/helm/${HELM_CHART}-${HELM_CHART_VER}.tgz"
                   }
                 }
               }
@@ -124,7 +124,7 @@ pipeline{
 
         stage ('Deploy to QA'){
             steps{
-                 sh "helm upgrade --install ${APP_NAME}  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,service.nodePort=$QA_PORT --namespace qa pochelmrepo/${APP_NAME} --version ${HELM_CHART_VER}"
+                 sh "helm upgrade --install ${APP_NAME}  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,service.nodePort=$QA_PORT --namespace qa helm/${APP_NAME} --version ${HELM_CHART_VER}"
             }
         }
 
