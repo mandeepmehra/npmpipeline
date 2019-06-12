@@ -19,7 +19,7 @@ pipeline{
         BUILD_NUMBER = "${env.BUILD_NUMBER}"
         IMAGE_TAG = "${DTR_URL}/${IMAGE_NAME}:${BUILD_NUMBER}"
 	      DOCKER_IMAGE = ''
-        SKIP_INTEGRATION_TEST='false'
+        SKIP_INTEGRATION_TEST='true'
         ARTIFACTORY_USER = ''
         ARTIFACTORY_PASS = ''
     }
@@ -124,7 +124,7 @@ pipeline{
         stage ('Deploy to QA'){
             steps{
                  sh 'helm repo update'
-                 sh "helm upgrade --install ${APP_NAME}  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,image.repository=${DTR_URL}/${IMAGE_NAME},service.nodePort=$QA_PORT --namespace qa helm/${APP_NAME} --version ${HELM_CHART_VER}"
+                 sh "helm upgrade --install ${APP_NAME}-qa  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,image.repository=${DTR_URL}/${IMAGE_NAME},service.nodePort=$QA_PORT --namespace qa helm/${APP_NAME} --version ${HELM_CHART_VER}"
             }
         }
 
@@ -137,6 +137,40 @@ pipeline{
             steps{
                 sh 'echo TBD'
             }
+        }
+
+        stage ('Deploy to Production'){
+          when{
+            branch 'master'
+          }
+          steps{
+                sh 'helm repo update'
+                sh "helm upgrade --install ${APP_NAME}-prod  --set buildNumber=$BUILD_NUMBER,image.tag=$BUILD_NUMBER,image.repository=${DTR_URL}/${IMAGE_NAME},service.nodePort=$QA_PORT --namespace prod helm/${APP_NAME} --version ${HELM_CHART_VER}"
+          }
+        }
+
+        stage ('Business Validation'){
+          when{
+            branch 'master'
+          }
+          steps{
+                script {
+                  env.RELEASE_SUCCESS = input message: 'Is Release successful?',
+                      parameters: [choice(name: 'Release is a success', choices: 'no\nyes', description: 'Choose "no" if you want to rollback the deployment')]
+                }
+          }
+        }
+        stage ('Rollback production'){
+          when{
+            allOf {
+              environment name: 'RELEASE_SUCCESS', value: 'no'
+              branch 'master'
+            }
+          }
+          steps{
+                sh 'helm repo update'
+                sh "helm rollback ${APP_NAME}-prod"
+          }
         }
     }
 
