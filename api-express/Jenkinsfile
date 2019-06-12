@@ -97,7 +97,7 @@ pipeline{
             }
             stage ('Publish helm package') {
               steps {
-                dir("helcharts"){
+                dir("helmcharts"){
                   sh 'helm repo update'
              
                   withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'artifactorycreds', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASS']]) {
