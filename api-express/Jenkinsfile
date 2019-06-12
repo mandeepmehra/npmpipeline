@@ -13,12 +13,12 @@ pipeline{
         HELM_CHART='xebia-be'
         HELM_CHART_VER = "${env.BUILD_NUMBER}"
         DTR_URL = 'mandeepmehra'
-	      DTR_CREDS = 'dockerhub'
+	    DTR_CREDS = 'dockerhub'
         DTR_NAMESPACE = 'ge-poc'
         IMAGE_NAME = 'ge-api-poc'
         BUILD_NUMBER = "${env.BUILD_NUMBER}"
         IMAGE_TAG = "${DTR_URL}/${IMAGE_NAME}:${BUILD_NUMBER}"
-	      DOCKER_IMAGE = ''
+	    DOCKER_IMAGE = ''
         SKIP_INTEGRATION_TEST='true'
         ARTIFACTORY_USER = ''
         ARTIFACTORY_PASS = ''
@@ -146,7 +146,7 @@ pipeline{
 
         stage ('Deploy to Production'){
           when{
-            branch 'master'
+            environment name: 'GIT_BRANCH', value: 'origin/master'
           }
           steps{
                 sh 'helm repo update'
@@ -156,7 +156,7 @@ pipeline{
 
         stage ('Business Validation'){
           when{
-            branch 'master'
+            environment name: 'GIT_BRANCH', value: 'origin/master'
           }
           steps{
                 script {
@@ -169,7 +169,7 @@ pipeline{
           when{
             allOf {
               environment name: 'RELEASE_SUCCESS', value: 'no'
-              branch 'master'
+              environment name: 'GIT_BRANCH', value: 'origin/master'
             }
           }
           steps{
