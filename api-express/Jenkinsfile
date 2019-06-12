@@ -24,6 +24,11 @@ pipeline{
         ARTIFACTORY_PASS = ''
     }
     stages{
+        stage ('Print Metadata'){
+            steps{
+                echo sh(returnStdout: true, script: 'env')
+            }
+        }
         stage ('Pull dependencies'){
            parallel{
                stage ('npm dependencies') {
