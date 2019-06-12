@@ -105,10 +105,7 @@ pipeline{
               steps {
                 dir("helcharts"){
                   sh 'helm repo update'
-                }
-              }
-              steps {
-                dir("helmcharts"){
+             
                   withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId:'artifactorycreds', usernameVariable: 'ARTIFACTORY_USER', passwordVariable: 'ARTIFACTORY_PASS']]) {
                     sh "curl -u${ARTIFACTORY_USER}:${ARTIFACTORY_PASS} -T ${HELM_CHART}-${HELM_CHART_VER}.tgz ${ARTIFACTORY_URL}/helm/${HELM_CHART}-${HELM_CHART_VER}.tgz"
                   }
