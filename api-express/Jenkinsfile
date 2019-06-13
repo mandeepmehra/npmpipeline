@@ -1,3 +1,13 @@
 @Library('poc') _
 
-releaseNodeJSApp(appName: 'xebia-be')
+releaseNodeJSApp(
+    appName             : 'xebia-be',
+    srcBaseDir          : 'api-express',
+    helmChartName       : 'xebia-be',
+    dockerRepoName      : 'mandeepmehra',
+    dockerImageName     : 'ge-api-poc',
+    skipIntegrationTest : 'true',
+    skipImageScan       : 'false',
+    port_QA             : 30101,
+    port_Prod           : 30100    
+)
