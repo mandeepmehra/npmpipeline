@@ -1,3 +1,3 @@
 @Library('poc') _
 
-releaseNodeJSApp()
+releaseNodeJSApp(appName: 'xebia-be')
