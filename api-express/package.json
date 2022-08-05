@@ -39,7 +39,7 @@
     "@babel/register": "^7.4.4",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
-    "mongoose": "^5.5.9",
+    "mongoose": "^5.7.5",
     "nodemon": "^1.19.0",
     "supertest": "^4.0.2"
   }
